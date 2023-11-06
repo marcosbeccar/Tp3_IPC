@@ -1,5 +1,5 @@
 def hola():
-    with open(r'C:\Users\narco\OneDrive\VS Code\Tp3_IPC\transacciones_simple.txt','r') as file:
+    with open("C:\Users\Carolina\Documents\1° año Negocios Digitales\2° Semestre ND\IPC\Trabajo practico 3\Tp3_IPC\transacciones_simple.txt") as file:
         listas_para_graficar=[] #una por nombre
         linea1=file.readline()
         lista_de_primeros_nombres=linea1.split('')

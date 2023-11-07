@@ -40,7 +40,7 @@ with open(file_largo_M,'r') as file:
                 if len(datos) > index_ñoqui + 1:
                     deudores = []
                     for nombre in inquilinos:
-                        if nombre not in datos[index_ñoqui + 1:]:
+                        if nombre not in datos[index_ñoqui + 1:]: #[1:] (desde ese índice/elemento en adelante)
                             deudores.append(nombre)
 
                 else:
@@ -50,9 +50,10 @@ with open(file_largo_M,'r') as file:
                 deudores = datos[3:]
                 deudores.append(pagador)
 
-        return print(fecha, pagador, monto, deudores)
+        return print(fecha, pagador, monto, deudores) #sacar el print
 
 
-
+    #prueba--
     for line in file:
         separar_datos(line,inquilinos)
+    #--------

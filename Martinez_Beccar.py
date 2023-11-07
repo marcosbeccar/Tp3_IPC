@@ -1,7 +1,19 @@
-# File caro:  C:\Users\Carolina\Documents\1° año Negocios Digitales\2° Semestre ND\IPC\Trabajo practico 3\Tp3_IPC\transacciones_simple.txt
-# File M:  C:\Users\narco\OneDrive\VS Code\Tp3_IPC\transacciones_simple.txt
 
-with open(r'C:\Users\narco\OneDrive\VS Code\Tp3_IPC\transacciones_simple.txt','r') as file:
+#--provisional--#
+file_simple_M=r'C:\Users\narco\OneDrive\VS Code\Tp3_IPC\transacciones_simple.txt'
+file_largo_M=r'C:\Users\narco\OneDrive\VS Code\Tp3_IPC\transacciones_largo.txt'
+file_simple_C=r'C:\Users\Carolina\Documents\1° año Negocios Digitales\2° Semestre ND\IPC\Trabajo practico 3\Tp3_IPC\transacciones_simple.txt'
+file_largo_C=r''
+
+'''
+|^^^^^^^^^^^^^^^^^\||__|____
+|    Camioncito    ||""'|""\__,_
+| _____________    l||__|__|__| )
+...|(@)@)"""""""**|(@)(@) ** |(@)
+
+'''
+
+with open(file_largo_M,'r') as file:
     datos_deuda={}
     inquilinos = []
     

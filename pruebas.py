@@ -1,32 +1,27 @@
 
-
-with open(r'C:\Users\Carolina\Documents\1° año Negocios Digitales\2° Semestre ND\IPC\Trabajo practico 3\Tp3_IPC\transacciones_simple.txt','r') as file:
-    datos_deuda={}
-    lista_nombres = []
+ 
     
-    primer_linea=file.readline()
-    primer_linea=primer_linea.rstrip()
-    nombres=primer_linea.split(' ')
-    for nombre in nombres:
-        lista_nombres.append(nombre)
-    
-    
-    def separacion_datos ():
+    # def separacion_datos1 ():
         
-        for line in file:
-            datos = line.split()
-            fecha = datos[0]
+    #     for line in file:
+    #         datos = line.split()
+    #         fecha = datos[0]
             
-            if datos[1] == "*":
-                lista_nombres.append(datos[2])
-            else:
-                if datos[1] in lista_nombres:
-                    datos_deuda[datos[1]] += datos[2]
+    #         if datos[1] == "*": #decide si el indice 2 esta agregando a alguien o indicando monto
+    #             inquilinos.append(datos[2])
+    #         else:
+    #             monto=datos[2]
+    #             if datos[3]=='~':
+    #                 try:
+    #                     if datos[4]:
+    #                         pass
+    #                 except IndexError:
+    #                     pass
+                    
+                    
+    #     return fecha
                     
         
                   
                 
-                
-                
-        
-    separacion_datos()
+    #separacion_datos()

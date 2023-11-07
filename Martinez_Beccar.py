@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 
 #--provisional--#
 file_simple_M=r'C:\Users\narco\OneDrive\VS Code\Tp3_IPC\transacciones_simple.txt'
@@ -49,10 +50,31 @@ with open(file_simple_M,'r') as file:
                 deudores = datos[3:]
                 deudores.append(pagador)
 
-        return print(fecha, pagador, monto, deudores) #sacar el print
+        return fecha, pagador, monto, deudores
 
 
-    #prueba--
-    for line in file:
-        separar_datos(line,inquilinos)
-    #--------
+    lista_fechas=[]
+    deudas={}
+    
+    
+    def calculo_deuda():
+        for line in file:
+            fecha, pagador, monto, deudores=separar_datos(line, inquilinos)
+            for nombre in inquilinos:
+                if nombre not in deudas:
+                    deudas[nombre]=0
+            if fecha not in lista_fechas:
+                lista_fechas.append(fecha)
+            if pagador != '*':
+                deudas[pagador]-=round(monto)
+                deuda=monto/len(deudores)
+                for persona in deudores:
+                    deudas[persona]+=round(deuda)
+            
+            
+        
+
+    calculo_deuda()
+    print(deudas)
+
+        

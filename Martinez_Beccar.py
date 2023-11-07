@@ -13,13 +13,12 @@ file_largo_C=r''
 
 '''
 
-with open(file_largo_M,'r') as file:
-    datos_deuda={}
+with open(file_simple_M,'r') as file:
     inquilinos = []
     
     primer_linea=file.readline()
     primer_linea=primer_linea.rstrip()
-    nombres=primer_linea.split(' ')
+    nombres=primer_linea.split()
     for nombre in nombres:
         inquilinos.append(nombre)
     
@@ -37,7 +36,7 @@ with open(file_largo_M,'r') as file:
             if '~' in datos:
                 index_ñoqui = datos.index('~')
                 monto = int(datos[2])
-                if len(datos) > index_ñoqui + 1:
+                if len(datos) > index_ñoqui + 1:  #Identifica si hay algo después del ñoqui, viendo el largo de la línea
                     deudores = []
                     for nombre in inquilinos:
                         if nombre not in datos[index_ñoqui + 1:]: #[1:] (desde ese índice/elemento en adelante)

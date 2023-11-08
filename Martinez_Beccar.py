@@ -51,15 +51,15 @@ with open(file_simple_M,'r') as file:
                 deudores.append(pagador)
 
         return fecha, pagador, monto, deudores
-
-
-    lista_fechas=[]
-    deudas={}
     
     
     def calculo_deuda():
+        lista_fechas=[]
+        deudas={}
+        historial_deudas = [] #para guardar la evolución de las deudas
         for line in file:
             fecha, pagador, monto, deudores=separar_datos(line, inquilinos)
+            deudas_iteracion = {}
             for nombre in inquilinos:
                 if nombre not in deudas:
                     deudas[nombre]=0
@@ -70,11 +70,33 @@ with open(file_simple_M,'r') as file:
                 deuda=monto/len(deudores)
                 for persona in deudores:
                     deudas[persona]+=round(deuda)
-            
-            
-        
+                deudas_iteracion = deudas.copy()  # Agregar una copia independiente
+                historial_deudas.append(deudas_iteracion)  # Guardar esta copia en la lista
+        return deudas, lista_fechas, historial_deudas
+    
+    #borrar a la mierda--->
+    def grafico_evolucion(lista_fechas, historial_deudas, inquilinos):
+        for nombre in inquilinos:
+            deuda_por_persona = []
+            for deuda in historial_deudas:
+                if isinstance(deuda, dict):
+                    deuda_por_persona.append(deuda.get(nombre, 0))
+            plt.plot(lista_fechas, deuda_por_persona, label=nombre)
+    
+        plt.xlabel('Fechas')
+        plt.ylabel('Deuda')
+        plt.title('Evolución de las deudas por persona')
+        plt.legend()
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.show()
 
-    calculo_deuda()
-    print(deudas)
+    
+    
+    deuda, lista_fechas, historial_deudas = calculo_deuda()
+    grafico_evolucion(historial_deudas, lista_fechas, inquilinos)
+        
+    
+            
 
         

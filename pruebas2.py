@@ -63,7 +63,7 @@ with open(file_simple_M,'r') as file:
             for nombre in inquilinos:
                 if nombre not in deudas:
                     deudas[nombre]=0
-            if fecha not in lista_fechas:
+            if pagador != '*':
                 lista_fechas.append(fecha)
             if pagador != '*':
                 deudas[pagador]-=round(monto)
@@ -75,21 +75,26 @@ with open(file_simple_M,'r') as file:
         return deudas, lista_fechas, historial_deudas
     
     
-    def grafico_evolucion(inquilinos):
-        deudas, lista_fechas, historial_deudas = calculo_deuda()
+    def grafico_evolucion(historial_deudas, lista_fechas, inquilinos):
+        for nombre in inquilinos:
+            deuda_por_persona = [deuda.get(nombre, 0) for deuda in historial_deudas]
+            plt.plot(lista_fechas, deuda_por_persona, label=nombre)
+
+        plt.xlabel('Fechas')
+        plt.ylabel('Deuda')
+        plt.title('Evolución de las deudas por persona')
+        plt.legend()
+        plt.xticks(rotation=45)
+        plt.tight_layout()
+        plt.show()
         
-        for dia in historial_deudas:
+    deudas, lista_fechas, historial_deudas=calculo_deuda()
+    grafico_evolucion(historial_deudas, lista_fechas, inquilinos)
             
             
 
     
     
-    #grafico_evolucion(inquilinos)
-    deudas, lista_fechas, historial_deudas = calculo_deuda()
-    #grafico_evolucion(inquilinos)
-    #print(historial_deudas)
-    for dia in historial_deudas:
-        print(dia.keys())
     
     
             

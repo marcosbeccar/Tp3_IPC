@@ -97,6 +97,39 @@ with open(file_simple_M,'r') as file:
         plt.xticks(rotation=60)
         plt.tight_layout()
         #plt.show()
+    
+    def proceder(datos_buscados):
+        deuda_fecha=[]
+        for nombre in inquilinos:
+            monto_fecha=datos_buscados.get(nombre)
+            if monto_fecha == None:
+                deuda_fecha.append(0)
+            else:
+                deuda_fecha.append(monto_fecha)
+        i=0
+        deben=[]
+        les_deben=[]
+        deben_nombres=[]
+        les_deben_nombres=[]
+        for deuda in deuda_fecha:
+            if deuda >0:
+                deben.append(deuda)
+                deben_nombres.append(inquilinos[i]+f'\n${deuda}')
+            elif deuda==0:
+                pass
+            else:
+                les_deben.append(-deuda)
+                les_deben_nombres.append(inquilinos[i]+f'\n${deuda}')
+            i+=1    
+        
+        plt.figure()
+        plt.subplot(1,2,1)
+        plt.pie(deben, labels=deben_nombres)
+        plt.title('Esta gente debe plata')
+        plt.subplot(1,2,2)
+        plt.pie(les_deben, labels=les_deben_nombres)
+        plt.title('A esta gente le deben plata')
+        plt.show()
         
     def grafico_torta(deudas,fecha_usuario):
         fechas = [] 
@@ -111,25 +144,25 @@ with open(file_simple_M,'r') as file:
             if fecha_usuario in lista_fechas:
                 indice=lista_fechas.index(fecha_usuario)
                 datos_buscados=historial_deudas[indice]
+                proceder(datos_buscados)
             else:
                 ultima_fecha_registrada = None
                 for fecha in lista_fechas:
+                    fecha=dt.strptime(fecha, '%Y-%m-%d')
                     if fecha < fecha_usuario_dt:
                         ultima_fecha_registrada = fecha
                     else:
                         break
+                ultima_fecha_registrada=ultima_fecha_registrada.strftime('%Y-%m-%d')
                 indice=lista_fechas.index(ultima_fecha_registrada)
                 datos_buscados=historial_deudas[indice]
+                proceder(datos_buscados)
+            
         else:
             print("--Fecha inválida--")
-        for nombre in inquilinos:
-            datos1=[]
-            datos1.append(deudas.get(nombre))
-        print(datos1)
-            
-        
-        
-    fecha_usuario= '2022-02-01'   
+    
+    
+    fecha_usuario= '2022-02-21'   
     deudas, lista_fechas, historial_deudas=calculo_deuda()
     grafico_evolucion(historial_deudas, lista_fechas, inquilinos)
     grafico_torta(deudas,fecha_usuario)

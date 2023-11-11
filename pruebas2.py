@@ -16,37 +16,43 @@ file_largo_C=r''
 
 '''
 
-with open(file_simple_M,'r') as file:
-    inquilinos = []
+with open(file_simple_M,'r') as file: #Abrimos el archivo con el método with open para que al finalizar la ejecución del bloque de codigo, Python automáticamente cierre el archivo
+    inquilinos = [] #Lista en la que, mediante ir leyendo cada linea con el for, iremos guardando los inquilinos
     
-    primer_linea=file.readline()
-    primer_linea=primer_linea.rstrip()
-    nombres=primer_linea.split()
-    for nombre in nombres:
-        inquilinos.append(nombre)
+    primer_linea=file.readline() #Escribimos readline() para que lea la primer linea que contiene los nombres de los inquilinos que están desde el comienzo
+    primer_linea=primer_linea.rstrip() #Eliminamos el salto de linea "/n"
+    nombres=primer_linea.split() #Convertimos los nombres de la primera linea en una lista
+    for nombre in nombres: #Por cada nombre en la lista de nombres..
+        inquilinos.append(nombre) #Lo agregamos a la lista de inquilinos
     
     
     def separar_datos(line, inquilinos):
-        datos = line.split()
-        fecha = datos[0]
-        pagador = datos[1]
+        #ENTRADA: 2 argumentos -->  la linea a analizar y el inquilino (ambos strings)
+        #SALIDA: Por cada línea, la fecha (string), quien es el pagador (string), el monto(string) y los deudores (string)
+        
+        datos = line.split() #Creamos una lista con cada dato de la línea separado por espacios
+        fecha = datos[0] #La fecha corresponde al elemento 0 de la lista
+        pagador = datos[1] #El pagador corresponde al elemento 1 de la lista
 
-        if pagador == "*":
-            inquilinos.append(datos[2])
+        if pagador == "*": #Si el elemento 1 de la lista es " * " significa que se incorpora un nuevo inquilino
+            inquilinos.append(datos[2]) #El nuevo inquilino se encuentra en el elemento 2 de la lista datos, después del "*"
+            #A las variables deudores y monto aún no le asignamos un valor, sino más adelante
             deudores = None
             monto = None
+        
         else:
-            if '~' in datos:
-                index_ñoqui = datos.index('~')
+            if '~' in datos: #Si se encuentra el caracter "~"...
                 monto = int(datos[2])
-                if len(datos) > index_ñoqui + 1:  #Identifica si hay algo después del ñoqui, viendo el largo de la línea
+                
+                index_ñoqui = datos.index('~') #Buscamos en que posición se encuentra el caracter
+                if len(datos) > index_ñoqui + 1:  #Identificamos si hay algo después del ñoqui, viendo el largo de la línea
                     deudores = []
                     for nombre in inquilinos:
                         if nombre not in datos[index_ñoqui + 1:]: #[1:] (desde ese índice/elemento en adelante)
                             deudores.append(nombre)
 
                 else:
-                    deudores = inquilinos.copy()
+                    deudores = inquilinos.copy() #Creamos una copia de la lista inquilinos y asignándola a la variable deudores
             else:
                 monto = int(datos[2])
                 deudores = datos[3:]
@@ -56,24 +62,37 @@ with open(file_simple_M,'r') as file:
     
     
     def calculo_deuda():
-        lista_fechas=[]
-        deudas={}
-        historial_deudas = [] #para guardar la evolución de las deudas
+        # Función que realiza un seguimiento y cálculo de las deudas entre inquilinos en función de datos proporcionados el archivo
+        #SALIDAS:
+        # - deudas --> Diccionario que contiene las deudas finales de cada inquilino
+        # - lista_fechas --> Lista de fechas encontradas en los datos.
+        # - historial_deudas --> Lista que contiene el estado de las deudas en cada iteración.
+        
+        #Inicialización de variables:  
+        lista_fechas=[] #Lista en la que se irán guardando las fechas
+        deudas={} #Diccionario en el que se guardarán las deudas totales de cada uno de los inquilinos
+        historial_deudas = [] #Lista para guardar la evolución de las deudas
+        
+        #Iteración a través de las líneas del archivo:
         for line in file:
-            fecha, pagador, monto, deudores=separar_datos(line, inquilinos)
+            fecha, pagador, monto, deudores=separar_datos(line, inquilinos) #LLamamos a la función que cramos previamente que devolvia la fecha, el pagador, el monto y los deudores
             deudas_iteracion = {}
-            for nombre in inquilinos:
-                if nombre not in deudas:
-                    deudas[nombre]=0
-            if pagador != '*':
-                if fecha not in lista_fechas: 
-                    lista_fechas.append(fecha)
+            
+            for nombre in inquilinos: 
+                if nombre not in deudas: #Si el inquilino no está en el diccionario.. 
+                    deudas[nombre]=0 #Lo agregamos como clave con el valor 0
+            
+            if pagador != '*': #Siempre que haya un nombre y no el caracter "*"...
+                if fecha not in lista_fechas: #Si la fecha no está en la lista de las fechas...
+                    lista_fechas.append(fecha) #Agregamos la fecha
                     deudas[pagador]-=round(monto)
                     deuda=monto/len(deudores)
+                    
                     for persona in deudores:
                         deudas[persona]+=round(deuda)
                     deudas_iteracion = deudas.copy()  # Agregar una copia independiente
                     historial_deudas.append(deudas_iteracion)  # Guarda esta copia en la lista
+                    
                 else:
                     deudas[pagador]-=round(monto)
                     deuda=monto/len(deudores)

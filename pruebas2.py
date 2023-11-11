@@ -6,7 +6,7 @@ from datetime import datetime as dt
 file_simple_M=r'C:\Users\narco\OneDrive\VS Code\Tp3_IPC\transacciones_simple.txt'
 file_largo_M=r'C:\Users\narco\OneDrive\VS Code\Tp3_IPC\transacciones_largo.txt'
 file_simple_C=r'C:\Users\Carolina\Documents\1° año Negocios Digitales\2° Semestre ND\IPC\Trabajo practico 3\Tp3_IPC\transacciones_simple.txt'
-file_largo_C=r''
+file_largo_C=r'C:\Users\Carolina\Documents\1° año Negocios Digitales\2° Semestre ND\IPC\Trabajo practico 3\Tp3_IPC\transacciones_largo.txt'
 
 '''
 |^^^^^^^^^^^^^^^^^\||__|____
@@ -16,7 +16,7 @@ file_largo_C=r''
 
 '''
 
-with open(file_simple_M,'r') as file: #Abrimos el archivo con el método with open para que al finalizar la ejecución del bloque de codigo, Python automáticamente cierre el archivo
+with open(file_largo_C,'r') as file: #Abrimos el archivo con el método with open para que al finalizar la ejecución del bloque de codigo, Python automáticamente cierre el archivo
     inquilinos = [] #Lista en la que, mediante ir leyendo cada linea con el for, iremos guardando los inquilinos
     
     primer_linea=file.readline() #Escribimos readline() para que lea la primer linea que contiene los nombres de los inquilinos que están desde el comienzo
@@ -98,7 +98,7 @@ with open(file_simple_M,'r') as file: #Abrimos el archivo con el método with op
                     deuda=monto/len(deudores)
                     for persona in deudores:
                         deudas[persona]+=round(deuda)
-                    
+                                    
         return deudas, lista_fechas, historial_deudas
     
     

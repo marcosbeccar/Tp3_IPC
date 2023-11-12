@@ -85,16 +85,16 @@ with open(file_largo_C,'r') as file: #Abrimos el archivo con el método with ope
             if pagador != '*': #Siempre que haya un nombre y no el caracter "*"...
                 if fecha not in lista_fechas: #Si la fecha no está en la lista de las fechas...
                     lista_fechas.append(fecha) #Agregamos la fecha
-                    deudas[pagador]-=round(monto)
-                    deuda=monto/len(deudores)
+                    deudas[pagador]-=round(monto) #Se descuenta el monto para quien pago la deuda
+                    deuda=monto/len(deudores) #Hacemos el calculo de cuantó es el monto que tiene que pagar cada uno
                     
-                    for persona in deudores:
-                        deudas[persona]+=round(deuda)
-                    deudas_iteracion = deudas.copy()  # Agregar una copia independiente
-                    historial_deudas.append(deudas_iteracion)  # Guarda esta copia en la lista
+                    for persona in deudores: #Para cada uno de los que tienen que pagar la deuda...
+                        deudas[persona]+=round(deuda) #Les sumamos el monto 
+                    deudas_iteracion = deudas.copy()  # Agregamos una copia independiente
+                    historial_deudas.append(deudas_iteracion)  # Guardamos esta copia en la lista
                     
-                else:
-                    deudas[pagador]-=round(monto)
+                else: #Si la fecha ya estaba en la lista de las fechas...
+                    deudas[pagador]-=round(monto)#Se descuenta el monto para quien pago la deuda
                     deuda=monto/len(deudores)
                     for persona in deudores:
                         deudas[persona]+=round(deuda)
@@ -103,69 +103,97 @@ with open(file_largo_C,'r') as file: #Abrimos el archivo con el método with ope
     
     
     def grafico_evolucion(historial_deudas, lista_fechas, inquilinos):
-        for nombre in inquilinos:
+        #Función para generar un gráfico de línea que muestra la evolución de las deudas de cada persona a lo largo del tiempo. 
+        #ENTRADAS: 
+            # - historial_deudas: lista de diccionarios que contiene información sobre las deudas de cada persona a lo largo del tiempo.
+            # - lista_fechas: lista que contiene las fechas correspondientes a las deudas en el historial.
+            # - inquilinos: lista que contiene los nombres de los inquilinos.
+        #SALIDAS:
+            #
+        
+        for nombre in inquilinos: #Recorremos cada inquilino
             deuda_por_persona = []
-            for deuda in historial_deudas:
-                deuda_por_persona.append(deuda.get(nombre)) #busca el nombre en cada diccionario de deudas
+            for deuda in historial_deudas: #Recorremos el historial de deudas para obtener la deuda de esa persona en cada fecha
+                deuda_por_persona.append(deuda.get(nombre)) #Buscamos el nombre en cada diccionario de deudas
             plt.plot(lista_fechas, deuda_por_persona, label=nombre)
 
-        plt.xlabel('Fechas')
-        plt.ylabel('Deuda')
-        plt.title('Evolución de las deudas por persona')
+        plt.xlabel('Fechas') #El eje x representa las fechas
+        plt.ylabel('Deuda') # El eje y representa las deudas
+        plt.title('Evolución de las deudas por persona') #Establecemos el título
         plt.legend()
         plt.xticks(rotation=60)
         plt.tight_layout()
         #plt.show()
+        
     
     def proceder(datos_buscados):
-        deuda_fecha=[]
-        for nombre in inquilinos:
-            monto_fecha=datos_buscados.get(nombre)
-            if monto_fecha == None:
-                deuda_fecha.append(0)
-            else:
-                deuda_fecha.append(monto_fecha)
+        #Función que genera un gráfico que muestra quién debe dinero y a quién le deben dinero en una fecha específica
+        #ENTRADA: el diccionario "datos_buscados" que contiene la información de las deudas en una fecha específica.
+        
+        deuda_fecha=[] #Lista que almacenará la información sobre las deudas en la fecha específica
+        for nombre in inquilinos: #Para cada inquilino...
+            monto_fecha=datos_buscados.get(nombre) #Se obtiene el monto de la deuda en la fecha específica desde el diccionario datos_buscados. 
+            if monto_fecha == None: #Si el monto es none...
+                deuda_fecha.append(0) #Se asume que la deuda es 0.
+            else: 
+                deuda_fecha.append(monto_fecha) 
+        
         i=0
-        deben=[]
-        les_deben=[]
-        deben_nombres=[]
-        les_deben_nombres=[]
+        #Generación de listas para el gráfico
+        deben=[] #Lista para las deudas positivas 
+        les_deben=[] #Lista para las deudas negativas
+        deben_nombres=[] #Lista para almacenar los nombres de quienes tienen las deudas positivas 
+        les_deben_nombres=[]#Lista para almacenar los nombres de quienes tienen las deudas negativas
+         
         for deuda in deuda_fecha:
-            if deuda >0:
-                deben.append(deuda)
-                deben_nombres.append(inquilinos[i]+f'\n${deuda}')
+            if deuda >0: #Si la deuda es positiva....
+                deben.append(deuda) #Se agrega a la lista "deben"
+                deben_nombres.append(inquilinos[i]+f'\n${deuda}') #Utilizamos una cadena formateada para agregar la deuda a la etiqueta, precedida por un salto de línea (\n) y el símbolo del dólar ($). Esto hace que el nombre del inquilino y la cantidad de deuda se muestran en líneas separadas.
             elif deuda==0:
                 pass
-            else:
-                les_deben.append(-deuda)
+            else: #Si la deuda es negativa...
+                les_deben.append(-deuda) #Se agrega a la lista "les_deben" con la deuda en negativo
                 les_deben_nombres.append(inquilinos[i]+f'\n${deuda}')
             i+=1    
         
+        #Creamos una figura con dos subgráficos (subplots), cada uno representando una parte 
+        
+        #El primer subgráfico muestra las deudas (deben)
         plt.figure()
         plt.subplot(1,2,1)
         plt.pie(deben, labels=deben_nombres)
         plt.title('Esta gente debe plata')
+        
+        #El segundo subgráfico muestra las deudas negativas (les_deben)
         plt.subplot(1,2,2)
         plt.pie(les_deben, labels=les_deben_nombres)
         plt.title('A esta gente le deben plata')
         plt.show()
+      
+      
         
-    def grafico_torta(deudas,fecha_usuario):
+    def grafico_torta(deudas, fecha_usuario):
+        # La función genera un gráfico de torta que muestra quién debe dinero y a quién le deben dinero en una fecha específica o en la fecha más reciente antes de la fecha proporcionada por el usuario.
+       
         fechas = [] 
         for fecha in lista_fechas:  
-            fecha_convertida = dt.strptime(fecha, '%Y-%m-%d')  # Convertir cada fecha a un objeto datetime
+            fecha_convertida = dt.strptime(fecha, '%Y-%m-%d')  # Convertimos cada fecha a un objeto datetime
             fechas.append(fecha_convertida)
-        primera_fecha = min(fechas)
-        ultima_fecha = max(fechas)  
-        fecha_usuario_dt= dt.strptime(fecha_usuario, '%Y-%m-%d')
+        primera_fecha = min(fechas) #Recuperamos la primer fecha
+        ultima_fecha = max(fechas)  #Recuperamos la última fecha
+        fecha_usuario_dt= dt.strptime(fecha_usuario, '%Y-%m-%d') #La fecha proporcionada por el usuario también la conviertimos a un objeto datetime
         
-        if primera_fecha <= fecha_usuario_dt <= ultima_fecha:
+        if primera_fecha <= fecha_usuario_dt <= ultima_fecha: #Verificamos si la fecha proporcionada por el usuario está dentro del rango de fechas existentes
+            
             if fecha_usuario in lista_fechas:
-                indice=lista_fechas.index(fecha_usuario)
-                datos_buscados=historial_deudas[indice]
-                proceder(datos_buscados)
-            else:
+                #Si la fecha proporcionada por el usuario está en la lista de fechas,.
+                indice=lista_fechas.index(fecha_usuario) #Buscamos el indice
+                datos_buscados=historial_deudas[indice] 
+                proceder(datos_buscados) #Se extraen los datos de deuda para esa fecha específica utilizando la función proceder
+            
+            else: #Si la fecha proporcionada por el usuario no está en la lista de fechas....
                 ultima_fecha_registrada = None
+                #Buscamos la fecha más reciente antes de la fecha del usuario 
                 for fecha in lista_fechas:
                     fecha=dt.strptime(fecha, '%Y-%m-%d')
                     if fecha < fecha_usuario_dt:
@@ -175,7 +203,7 @@ with open(file_largo_C,'r') as file: #Abrimos el archivo con el método with ope
                 ultima_fecha_registrada=ultima_fecha_registrada.strftime('%Y-%m-%d')
                 indice=lista_fechas.index(ultima_fecha_registrada)
                 datos_buscados=historial_deudas[indice]
-                proceder(datos_buscados)
+                proceder(datos_buscados) #extraemos los datos de deuda para esa fecha utilizando la función proceder
             
         else:
             print("--Fecha inválida--")

@@ -56,8 +56,7 @@ with open(file_simple_M,'r') as file: #Abrimos el archivo con el método with op
             else:
                 monto = int(datos[2])
                 deudores = datos[3:]
-                deudores.append(pagador)
-
+        
         return fecha, pagador, monto, deudores
     
     
@@ -94,7 +93,7 @@ with open(file_simple_M,'r') as file: #Abrimos el archivo con el método with op
                     # Agregamos el estado actual de las deudas a historial_deudas
                     deudas_iteracion = deudas.copy()
                     historial_deudas.append(deudas_iteracion)
-                    deudas_iteracion = {}  # Limpiamos deudas_iteracion para el próximo día
+                   
                     
                 else: #Si la fecha ya estaba en la lista de las fechas...
                     deudas[pagador]-=round(monto)#Se descuenta el monto para quien pago la deuda
@@ -118,14 +117,14 @@ with open(file_simple_M,'r') as file: #Abrimos el archivo con el método with op
             deuda_por_persona = []
             for deuda in historial_deudas: #Recorremos el historial de deudas para obtener la deuda de esa persona en cada fecha
                 deuda_por_persona.append(deuda.get(nombre)) #Buscamos el nombre en cada diccionario de deudas
-                print(nombre,deuda.get(nombre))
+                
             plt.plot(lista_fechas, deuda_por_persona, label=nombre)
 
         plt.xlabel('Fechas') #El eje x representa las fechas
         plt.ylabel('Deuda') # El eje y representa las deudas
         plt.title('Evolución de las deudas por persona') #Establecemos el título
         plt.legend()
-        plt.xticks(rotation=60)
+        plt.xticks([lista_fechas[0],lista_fechas[-1]],visible=True,rotation=60)
         plt.tight_layout()
         #plt.show() #mejor no, asi aparecen ambos gráficos a la vez cuando se ejecuta el programa
         

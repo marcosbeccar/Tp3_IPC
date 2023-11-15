@@ -2,24 +2,24 @@ Registro de deudas al 2028-11-20
 
 Deudores:
 
- Sarah debe dar $2,178,504.00
  Crystal debe dar $1,917,513.00
- Darryl debe dar $217,221.00
+ Sarah debe dar $2,178,504.00
  Jack debe dar $46,096.00
+ Darryl debe dar $217,221.00
 
 Acreedores:
 
  Jessica debe recibir $1,626,497.00
+ Valerie debe recibir $434,509.00
  Jonathan debe recibir $1,318,592.00
  Marc debe recibir $979,761.00
- Valerie debe recibir $434,509.00
 
 Intercambios:
 
- Sarah debe pagarle a Jessica $1,626,497.00
- Sarah debe pagarle a Jonathan $552,007.00
- Crystal debe pagarle a Jonathan $766,585.00
- Crystal debe pagarle a Marc $979,761.00
- Crystal debe pagarle a Valerie $171,167.00
- Darryl debe pagarle a Valerie $217,221.00
- Jack debe pagarle a Valerie $46,096.00
+ Crystal debe pagarle a Jessica $1,626,497.00
+ Crystal debe pagarle a Valerie $291,016.00
+ Sarah debe pagarle a Valerie $143,493.00
+ Sarah debe pagarle a Jonathan $1,318,592.00
+ Sarah debe pagarle a Marc $716,419.00
+ Jack debe pagarle a Marc $46,096.00
+ Darryl debe pagarle a Marc $217,221.00

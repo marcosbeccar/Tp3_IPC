@@ -243,10 +243,6 @@ with open(archivo,'r') as file: #Abrimos el archivo con el método with open par
             elif monto_deuda > 0:
                 deudores.append((nombre, monto_deuda))
 
-        # Ordenar deudores y acreedores por monto de deuda o acreencia
-        deudores.sort(key=lambda x: x[1], reverse=True)
-        acreedores.sort(key=lambda x: x[1], reverse=True)
-
         #Empiezo a armar el reporte con \n=salto de línea
         report = f"Registro de deudas al {ultima_fecha}\n\nDeudores:\n\n"
 
@@ -267,7 +263,7 @@ with open(archivo,'r') as file: #Abrimos el archivo con el método with open par
         while True:
             #Busca al inquilino con más deuda para ordenarlo
             deudor = None
-            for nombre, _ in deudores:
+            for nombre, _ in deudores: #el '_' se usa para ignorar el segundo dato de deudores (el monto)
                 deudor = nombre
                 break #corta para conseguir el primer deudor
             if deudor is None:

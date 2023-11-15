@@ -1,12 +1,17 @@
 import matplotlib.pyplot as plt
 from datetime import datetime as dt
 
-
 #--provisional--#
 file_simple_M=r'C:\Users\narco\OneDrive\VS Code\Tp3_IPC\transacciones_simple.txt'
 file_largo_M=r'C:\Users\narco\OneDrive\VS Code\Tp3_IPC\transacciones_largo.txt'
 file_simple_C=r'C:\Users\Carolina\Documents\1° año Negocios Digitales\2° Semestre ND\IPC\Trabajo practico 3\Tp3_IPC\transacciones_simple.txt'
 file_largo_C=r'C:\Users\Carolina\Documents\1° año Negocios Digitales\2° Semestre ND\IPC\Trabajo practico 3\Tp3_IPC\transacciones_largo.txt'
+
+### --INPUTS-- ###
+archivo=file_largo_M
+fecha_usuario= '2028-11-20'  
+'2022-02-21' 'última fecha simple'
+'2028-11-20' 'ultima fecha transacciones largo' 
 
 '''
 |^^^^^^^^^^^^^^^^^\||__|____
@@ -16,7 +21,7 @@ file_largo_C=r'C:\Users\Carolina\Documents\1° año Negocios Digitales\2° Semes
 
 '''
 
-with open(file_simple_M,'r') as file: #Abrimos el archivo con el método with open para que al finalizar la ejecución del bloque de codigo, Python automáticamente cierre el archivo
+with open(archivo,'r') as file: #Abrimos el archivo con el método with open para que al finalizar la ejecución del bloque de codigo, Python automáticamente cierre el archivo
     inquilinos = [] #Lista en la que, mediante ir leyendo cada linea con el for, iremos guardando los inquilinos
     
     primer_linea=file.readline() #Escribimos readline() para que lea la primer linea que contiene los nombres de los inquilinos que están desde el comienzo
@@ -56,8 +61,7 @@ with open(file_simple_M,'r') as file: #Abrimos el archivo con el método with op
             else:
                 monto = int(datos[2])
                 deudores = datos[3:]
-                deudores.append(pagador)
-
+        
         return fecha, pagador, monto, deudores
     
     
@@ -83,15 +87,18 @@ with open(file_simple_M,'r') as file: #Abrimos el archivo con el método with op
                     deudas[nombre]=0 #Lo agregamos como clave con el valor 0 (deuda 0)
             
             if pagador != '*': #Siempre que haya un nombre y no el caracter "*"...
-                if fecha not in lista_fechas: #Si la fecha no está en la lista de las fechas...
-                    lista_fechas.append(fecha) #Agregamos la fecha
-                    deudas[pagador]-=round(monto) #Se descuenta el monto para quien pago la deuda
-                    deuda=monto/len(deudores) #Hacemos el calculo de cuantó es el monto que tiene que pagar cada uno
-                    
-                    for persona in deudores: #Para cada uno de los que tienen que pagar la deuda...
-                        deudas[persona]+=round(deuda) #Les sumamos el monto 
-                    deudas_iteracion = deudas.copy()  # Agregamos una copia independiente
-                    historial_deudas.append(deudas_iteracion)  # Guardamos esta copia en la lista para luego poder 'recordar' el estado de deuda en dicha fecha
+                if fecha not in lista_fechas:  # Si la fecha no está en la lista de fechas...
+                    lista_fechas.append(fecha)  # Agregamos la fecha
+                    deudas[pagador] -= round(monto)  # Se descuenta el monto para quien pagó la deuda
+                    deuda = monto / len(deudores)  # Hacemos el cálculo de cuánto es el monto que tiene que pagar cada uno
+
+                    for persona in deudores:  # Para cada uno de los que tienen que pagar la deuda...
+                        deudas[persona] += round(deuda)  # Les sumamos el monto
+
+                    # Agregamos el estado actual de las deudas a historial_deudas
+                    deudas_iteracion = deudas.copy()
+                    historial_deudas.append(deudas_iteracion)
+                   
                     
                 else: #Si la fecha ya estaba en la lista de las fechas...
                     deudas[pagador]-=round(monto)#Se descuenta el monto para quien pago la deuda
@@ -115,14 +122,14 @@ with open(file_simple_M,'r') as file: #Abrimos el archivo con el método with op
             deuda_por_persona = []
             for deuda in historial_deudas: #Recorremos el historial de deudas para obtener la deuda de esa persona en cada fecha
                 deuda_por_persona.append(deuda.get(nombre)) #Buscamos el nombre en cada diccionario de deudas
-                print(nombre,deuda.get(nombre))
+                
             plt.plot(lista_fechas, deuda_por_persona, label=nombre)
 
         plt.xlabel('Fechas') #El eje x representa las fechas
         plt.ylabel('Deuda') # El eje y representa las deudas
         plt.title('Evolución de las deudas por persona') #Establecemos el título
         plt.legend()
-        plt.xticks(rotation=60)
+        plt.xticks([lista_fechas[0],lista_fechas[-1]],visible=True,rotation=60)
         plt.tight_layout()
         #plt.show() #mejor no, asi aparecen ambos gráficos a la vez cuando se ejecuta el programa
         
@@ -208,11 +215,95 @@ with open(file_simple_M,'r') as file: #Abrimos el archivo con el método with op
             
         else:
             print("--Fecha inválida--")
+
     
-    
-    fecha_usuario= '2022-02-21'   
+    ### --FUNCIONES-- ###
     deudas, lista_fechas, historial_deudas=calculo_deuda()
     grafico_evolucion(historial_deudas, lista_fechas, inquilinos)
     grafico_torta(deudas,fecha_usuario)
             
+
+    ### --EXTRAS-- ###
+
+    def generar_informe(archivo, deudas, lista_fechas, historial_deudas):
+        #Creo el informe al último día analizado
+        ultima_fecha = lista_fechas[-1]
+
+        #junta los datos de deuda para la última fecha
+        indice_ultima_fecha = lista_fechas.index(ultima_fecha)
+        datos_ultima_fecha = historial_deudas[indice_ultima_fecha]
+
+        deudores = []
+        acreedores = []
+
+        #Clasificación de inquilinos como deudores o acreedores
+        for nombre, monto_deuda in datos_ultima_fecha.items():
+            if monto_deuda < 0:
+                acreedores.append((nombre, abs(monto_deuda)))
+            elif monto_deuda > 0:
+                deudores.append((nombre, monto_deuda))
+
+        # Ordenar deudores y acreedores por monto de deuda o acreencia
+        deudores.sort(key=lambda x: x[1], reverse=True)
+        acreedores.sort(key=lambda x: x[1], reverse=True)
+
+        #Empiezo a armar el reporte con \n=salto de línea
+        report = f"Registro de deudas al {ultima_fecha}\n\nDeudores:\n\n"
+
+        for nombre, monto_deuda in deudores:
+            report += f" {nombre} debe dar ${monto_deuda:,.2f}\n"
+        '''
+        ':,.2f' indica el formato para que se lea mejor. La coma indica que se debe separar 
+        con comas, y '2f' indica que debe ser un float limitado a 2 decimales. 
+        '''
+        
+        report += "\nAcreedores:\n\n"
+
+        for nombre, monto_acreencia in acreedores:
+            report += f" {nombre} debe recibir ${monto_acreencia:,.2f}\n" 
+
+        report += "\nIntercambios:\n\n"
+
+        while True:
+            #Busca al inquilino con más deuda para ordenarlo
+            deudor = None
+            for nombre, _ in deudores:
+                deudor = nombre
+                break #corta para conseguir el primer deudor
+            if deudor is None:
+                break  #Corta si no hay deudores
+
+            # Buscar el acreedor con la acreencia más grande
+            acreedor = None
+            for nombre, _ in acreedores:
+                acreedor = nombre
+                break 
+            if acreedor is None:
+                break  #Corta si no hay acreedores
+
+            #Calculo del monto de intercambio
+            monto_intercambio = min(deudores[0][1], acreedores[0][1])
+
+            #Actualiza las listas de deudores y acreedores y agrega el intercambio al report
+            deudores[0] = (deudores[0][0], deudores[0][1] - monto_intercambio)
+            acreedores[0] = (acreedores[0][0], acreedores[0][1] - monto_intercambio)
+            report += f" {deudor} debe pagarle a {acreedor} ${monto_intercambio:,.2f}\n"
+
+            #En el caso que la deuda de alguin sea 0, lo elimina.
+            if deudores[0][1] == 0:
+                deudores.pop(0)
             
+            if acreedores[0][1] == 0:
+                acreedores.pop(0) #elimina al acreedor si ya no debe recibir plata
+
+        #Guarda el report en un archivo
+        archivo_nuevo = "reporte.txt"
+        with open(archivo_nuevo, "w") as archivo_informe: # 'w' de write
+            archivo_informe.write(report)
+
+        print(f"Reporte ubicado en: {archivo_nuevo}")
+
+    generar_informe(archivo, deudas, lista_fechas, historial_deudas)
+
+
+

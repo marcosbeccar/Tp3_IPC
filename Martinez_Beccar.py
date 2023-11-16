@@ -116,7 +116,6 @@ with open(archivo,'r') as file: #Abrimos el archivo con el método with open par
             # - lista_fechas: lista que contiene las fechas correspondientes a las deudas en el historial.
             # - inquilinos: lista que contiene los nombres de los inquilinos.
         #SALIDAS:
-            #
         
         for nombre in inquilinos: #Recorremos cada inquilino
             deuda_por_persona = []
@@ -129,7 +128,7 @@ with open(archivo,'r') as file: #Abrimos el archivo con el método with open par
         plt.ylabel('Deuda') # El eje y representa las deudas
         plt.title('Evolución de las deudas por persona') #Establecemos el título
         plt.legend()
-        plt.xticks([lista_fechas[0],lista_fechas[-1]],visible=True,rotation=60)
+        plt.xticks([lista_fechas[0],lista_fechas[-1]],visible=True,rotation=60) #Hace que solo se vea la primer y última fecha usando xticks
         plt.tight_layout()
         #plt.show() #mejor no, asi aparecen ambos gráficos a la vez cuando se ejecuta el programa
         

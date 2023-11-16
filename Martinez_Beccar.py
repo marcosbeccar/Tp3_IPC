@@ -13,13 +13,6 @@ fecha_usuario= '2028-11-20'
 '2022-02-21' 'última fecha simple'
 '2028-11-20' 'ultima fecha transacciones largo' 
 
-'''
-|^^^^^^^^^^^^^^^^^\||__|____
-|    Camioncito    ||""'|""\__,_
-| _____________    l||__|__|__| )
-...|(@)@)"""""""**|(@)(@) ** |(@)
-
-'''
 
 with open(archivo,'r') as file: #Abrimos el archivo con el método with open para que al finalizar la ejecución del bloque de codigo, Python automáticamente cierre el archivo
     inquilinos = [] #Lista en la que, mediante ir leyendo cada linea con el for, iremos guardando los inquilinos

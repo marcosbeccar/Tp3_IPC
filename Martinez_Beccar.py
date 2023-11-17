@@ -218,24 +218,24 @@ with open(archivo,'r') as file: #Abrimos el archivo con el método with open par
     ### --EXTRAS-- ###
 
     def generar_informe(archivo, deudas, lista_fechas, historial_deudas):
-        #Creo el informe al último día analizado
+        #Creamos el informe al último día analizado
         ultima_fecha = lista_fechas[-1]
 
-        #junta los datos de deuda para la última fecha
+        #juntamos los datos de deuda para la última fecha
         indice_ultima_fecha = lista_fechas.index(ultima_fecha)
         datos_ultima_fecha = historial_deudas[indice_ultima_fecha]
 
         deudores = []
         acreedores = []
 
-        #Clasificación de inquilinos como deudores o acreedores
+        #Clasificación de inquilinos como deudores o acreedores:
         for nombre, monto_deuda in datos_ultima_fecha.items():
-            if monto_deuda < 0:
-                acreedores.append((nombre, abs(monto_deuda)))
-            elif monto_deuda > 0:
-                deudores.append((nombre, monto_deuda))
+            if monto_deuda < 0: #Si la deuda es negativa...
+                acreedores.append((nombre, abs(monto_deuda))) #Se agrega a la lista de acreedores
+            elif monto_deuda > 0: #Si la duda es poositiva...
+                deudores.append((nombre, monto_deuda)) #Se agrega a la lista de deudores
 
-        #Empiezo a armar el reporte con \n=salto de línea
+        #Empiezamos a armar el reporte con \n=salto de línea
         report = f"Registro de deudas al {ultima_fecha}\n\nDeudores:\n\n"
 
         for nombre, monto_deuda in deudores:
@@ -245,15 +245,15 @@ with open(archivo,'r') as file: #Abrimos el archivo con el método with open par
         con comas, y '2f' indica que debe ser un float limitado a 2 decimales. 
         '''
         
-        report += "\nAcreedores:\n\n"
+        report += "\nAcreedores:\n\n" #Agregamos el título de acreedores
 
         for nombre, monto_acreencia in acreedores:
             report += f" {nombre} debe recibir ${monto_acreencia:,.2f}\n" 
 
-        report += "\nIntercambios:\n\n"
+        report += "\nIntercambios:\n\n" #Agregamos el título de Intercambios
 
         while True:
-            #Busca al inquilino con más deuda para ordenarlo
+            #Buscamos al inquilino con más deuda para ordenarlo
             deudor = None
             for nombre, _ in deudores: #el '_' se usa para ignorar el segundo dato de deudores (el monto)
                 deudor = nombre
@@ -261,7 +261,7 @@ with open(archivo,'r') as file: #Abrimos el archivo con el método with open par
             if deudor is None:
                 break  #Corta si no hay deudores
 
-            # Buscar el acreedor con la acreencia más grande
+            # Buscamos el acreedor con la acreencia más grande
             acreedor = None
             for nombre, _ in acreedores:
                 acreedor = nombre
@@ -269,10 +269,10 @@ with open(archivo,'r') as file: #Abrimos el archivo con el método with open par
             if acreedor is None:
                 break  #Corta si no hay acreedores
 
-            #Calculo del monto de intercambio
+            #Calculamos el monto de intercambio
             monto_intercambio = min(deudores[0][1], acreedores[0][1])
 
-            #Actualiza las listas de deudores y acreedores y agrega el intercambio al report
+            #Actualizamos las listas de deudores y acreedores y agrega el intercambio al report
             deudores[0] = (deudores[0][0], deudores[0][1] - monto_intercambio)
             acreedores[0] = (acreedores[0][0], acreedores[0][1] - monto_intercambio)
             report += f" {deudor} debe pagarle a {acreedor} ${monto_intercambio:,.2f}\n"
